@@ -5,19 +5,19 @@ const bcrypt = require('bcrypt');
 const createUser = async (req, res) => {
 
     try {
-        const { authType, firstName, lastName, email, phone, password } = req.body;
+        const { authType, firstName, lastName, image, gender, email, phone, password } = req.body;
 
-        if (!authType || !['Admin', 'User', 'Emp'].includes(authType)) {
+        if (!authType || !['Admin', 'Customer', 'Chef', 'Waiter'].includes(authType)) {
             return res.status(400).json({
                 status: 400,
-                error: 'Invalid authType. Must be one of: Admin, User, Emp.',
+                error: 'Invalid authType. Must be one of: Admin, Customer, Chef, Waiter.',
             });
         }
 
-        if (!firstName || !lastName || !email || !phone || !password) {
+        if (!firstName || !lastName || !image || !gender || !email || !phone || !password) {
             return res.status(400).json({
                 status: 400,
-                error: 'All fields (firstName, lastName, email, phone, password) are required.',
+                error: 'All fields (firstName, lastName, image, gender, email, phone, password) are required.',
             });
         }
 
@@ -38,6 +38,8 @@ const createUser = async (req, res) => {
             authType,
             firstName,
             lastName,
+            image,
+            gender,
             email,
             phone,
             password: hashedPassword,
@@ -98,9 +100,9 @@ const getAllUser = async (req, res) => {
 const getUserById = async (req, res) => {
 
     try {
-        const { Id } = req.body;
+        const { userId } = req.body;
 
-        const userData = await User.findById(Id);
+        const userData = await User.findById(userId);
 
         if (!userData) {
             return res.status(400).json({
@@ -161,7 +163,7 @@ const deleteUser = async (req, res) => {
 
     try {
         const userId = req.body.Id;
-      const userDelete = await User.findByIdAndDelete(userId);
+        const userDelete = await User.findByIdAndDelete(userId);
         if (!userDelete) {
             return res.status(400).json({
                 status: 400,
